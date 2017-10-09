@@ -1,4 +1,4 @@
-# Slack AD Sync
+# Slack AD Reporter
 
 ## Description
 
