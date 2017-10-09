@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+require './lib/libNotify'
+require './lib/libActiveDirectory'
+require './lib/libSlack'
+
+@user_list = []
+@user_list_not_enabled = []
+
+notification = Notify.new
+ad_users = SearchUserAD.new
+
+slack = InfoSlack.new
+
+slack.user_list.each do |user|
+  @user_list.push(ad_users.find_user_by_email(user)) if user.profile.email != nil and user.deleted == false
+end
+
+@user_list.each do |user|
+  if user[:ad_status] != 'enabled' and user[:ad_status] != 'unknow'
+    @user_list_not_enabled.push(user)
+  end
+end
+
+notification.send(@user_list_not_enabled)
